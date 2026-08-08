@@ -240,15 +240,17 @@
     }
     .footer a { color: #bd9d69; text-decoration: none; border-bottom: 1px dashed #6f5d3d; }
 
-    /* Кнопка вызова альтушки */
-    .alt-btn-wrap { margin-top: 12px; text-align: center; }
-    .alt-btn {
-      background: #8b3a5a;
+    /* Кнопки вызова альтушки и другие */
+    .alt-btn-wrap, .lada-photo-wrap, .reg-wrap {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .alt-btn, .lada-btn, .reg-btn {
       border: none;
       border-radius: 60px;
-      padding: 14px 30px;
+      padding: 14px 20px;
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #f7e7c6;
       cursor: pointer;
       border-bottom: 5px solid #4d1f33;
@@ -258,9 +260,14 @@
       letter-spacing: 2px;
       text-shadow: 1px 1px 0 #2a0f1b;
     }
+    .alt-btn { background: #8b3a5a; }
     .alt-btn:hover { background: #a8466e; transform: scale(1.02); color: white; }
+    .lada-btn { background: #3a6b5a; border-bottom-color: #1f3d33; }
+    .lada-btn:hover { background: #4d8a72; transform: scale(1.02); color: white; }
+    .reg-btn { background: #6b5a3a; border-bottom-color: #3d3322; }
+    .reg-btn:hover { background: #8a764a; transform: scale(1.02); color: white; }
 
-    /* Модальное окно */
+    /* Модальные окна (общие) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -297,7 +304,7 @@
     .modal-step.active { display: block; }
     .modal-step p { font-size: 1.1rem; margin-bottom: 14px; color: #ddd0b8; }
     .modal-step label { display: block; font-weight: 600; color: #cfb482; margin-bottom: 4px; }
-    .modal-step input[type="text"], .modal-step input[type="password"] {
+    .modal-step input[type="text"], .modal-step input[type="password"], .modal-step input[type="file"] {
       width: 100%;
       padding: 14px 16px;
       border-radius: 60px;
@@ -362,6 +369,29 @@
     }
     .result-box .big-emoji { font-size: 4rem; display: block; margin-bottom: 10px; }
 
+    /* Спец. модалка для повестки */
+    .conscription-modal .modal-box {
+      border-color: #c0392b;
+      background: #2c1a1a;
+    }
+    .conscription-modal .modal-box h3 { color: #e74c3c; border-color: #c0392b; }
+    .conscription-modal .modal-box p { color: #f0d0c0; }
+    .conscription-modal .modal-box .nav-buttons button { background: #a93226; border-bottom-color: #641e16; }
+    .conscription-modal .modal-box .nav-buttons button:hover { background: #c0392b; }
+
+    /* Превью фото Лады */
+    .lada-preview {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .lada-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 20px;
+      border: 2px solid #b38b54;
+      background: #0f0f0e;
+    }
+
     @media (max-width: 600px) {
       .header h1 { font-size: 2rem; letter-spacing: 2px; }
       .header h1 small { font-size: 0.9rem; padding: 0 8px; }
@@ -375,7 +405,7 @@
       .game-field .falling-item { font-size: 2rem; width: 36px; line-height: 36px; }
       .modal-box { padding: 20px 16px; }
       .modal-box h3 { font-size: 1.4rem; }
-      .alt-btn { font-size: 1rem; padding: 12px 20px; }
+      .alt-btn, .lada-btn, .reg-btn { font-size: 1rem; padding: 12px 20px; }
     }
   </style>
 </head>
@@ -414,7 +444,7 @@
       </div>
     </div>
 
-    <!-- ПРАВАЯ КОЛОНКА: ГАЛЕРЕЯ + ИГРА + ВЫЗОВ АЛЬТУШКИ -->
+    <!-- ПРАВАЯ КОЛОНКА: ГАЛЕРЕЯ + ИГРА + КНОПКИ -->
     <div class="block">
       <h2><span>🏭</span> Заводы, танки, Лада</h2>
       <div class="factory-row" id="factoryRow"></div>
@@ -437,6 +467,16 @@
       <div class="alt-btn-wrap">
         <button class="alt-btn" id="callAltBtn">💃 Вызвать альтушку</button>
       </div>
+
+      <!-- КНОПКА ЗАГРУЗКИ ФОТО ЛАДЫ -->
+      <div class="lada-photo-wrap">
+        <button class="lada-btn" id="ladaPhotoBtn">📸 Загрузить фото Лады</button>
+      </div>
+
+      <!-- КНОПКА ФЕЙК-РЕГИСТРАЦИИ -->
+      <div class="reg-wrap">
+        <button class="reg-btn" id="regBtn">📝 Регистрация (фейк)</button>
+      </div>
     </div>
   </div>
 
@@ -450,55 +490,115 @@
 <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ВЫЗОВА АЛЬТУШКИ ===== -->
 <div class="modal-overlay" id="altModal">
   <div class="modal-box">
-    <button class="modal-close" id="modalCloseBtn">✕</button>
+    <button class="modal-close" id="modalCloseAlt">✕</button>
     <h3>💃 Вызов альтушки</h3>
 
-    <!-- Шаг 1: Номер Лады -->
     <div class="modal-step active" data-step="1">
       <p>Введи номер своей Лады (например, <strong>А123ВС</strong>):</p>
       <input type="text" id="ladaNumber" placeholder="Номер Лады" maxlength="9">
       <div class="nav-buttons">
-        <button class="secondary" onclick="closeModal()">Отмена</button>
-        <button id="step1Next">Далее →</button>
+        <button class="secondary" onclick="closeModal('altModal')">Отмена</button>
+        <button id="step1NextAlt">Далее →</button>
       </div>
     </div>
 
-    <!-- Шаг 2: Тест на скуфа -->
     <div class="modal-step" data-step="2">
       <p><strong>Тест на скуфа</strong> (ответь честно):</p>
       <div id="quizContainer"></div>
       <div class="nav-buttons">
-        <button class="secondary" id="step2Back">← Назад</button>
-        <button id="step2Next">Результат →</button>
+        <button class="secondary" id="step2BackAlt">← Назад</button>
+        <button id="step2NextAlt">Результат →</button>
       </div>
     </div>
 
-    <!-- Шаг 3: Номер карты -->
     <div class="modal-step" data-step="3">
-      <p>Введите номер карты для перевода (шутка, можете ввести что угодно):</p>
+      <p>Введите номер карты для перевода (шутка, можно что угодно):</p>
       <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
       <div class="nav-buttons">
-        <button class="secondary" id="step3Back">← Назад</button>
-        <button id="step3Next">Вызвать альтушку!</button>
+        <button class="secondary" id="step3BackAlt">← Назад</button>
+        <button id="step3NextAlt">Вызвать альтушку!</button>
       </div>
     </div>
 
-    <!-- Шаг 4: Результат -->
     <div class="modal-step" data-step="4">
       <div class="result-box">
         <span class="big-emoji">🎉</span>
-        <p id="resultText">Альтушка уже в пути! Она едет на Ладе, везёт пиво и танк!</p>
+        <p id="resultTextAlt">Альтушка уже в пути! Она едет на Ладе, везёт пиво и танк!</p>
         <p style="font-size:1rem; color:#b38b54;">(на самом деле она просто забила на тебя)</p>
         <div class="nav-buttons" style="justify-content:center;">
-          <button id="resultDone">Закрыть</button>
+          <button id="resultDoneAlt">Закрыть</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ФОТО ЛАДЫ ===== -->
+<div class="modal-overlay" id="ladaPhotoModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalCloseLada">✕</button>
+    <h3>📸 Загрузить фото Лады</h3>
+    <div class="modal-step active" data-step="1">
+      <p>Выбери фото своей Лады (можно любое):</p>
+      <input type="file" id="ladaFileInput" accept="image/*">
+      <div class="lada-preview" id="ladaPreview"></div>
+      <div class="nav-buttons">
+        <button class="secondary" onclick="closeModal('ladaPhotoModal')">Отмена</button>
+        <button id="ladaUploadBtn">Отправить фото</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ФЕЙК-РЕГИСТРАЦИИ ===== -->
+<div class="modal-overlay" id="regModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalCloseReg">✕</button>
+    <h3>📝 Фейк-регистрация</h3>
+    <div class="modal-step active" data-step="1">
+      <p>Создай аккаунт скуфа (никто не сохранит твои данные):</p>
+      <label>Логин:</label>
+      <input type="text" id="regLogin" placeholder="Придумай логин">
+      <label>Пароль:</label>
+      <input type="password" id="regPass" placeholder="Пароль">
+      <label>Повтори пароль:</label>
+      <input type="password" id="regPass2" placeholder="Ещё раз">
+      <div class="nav-buttons">
+        <button class="secondary" onclick="closeModal('regModal')">Отмена</button>
+        <button id="regSubmitBtn">Зарегистрироваться</button>
+      </div>
+      <div id="regResult" style="margin-top:12px; text-align:center; font-weight:bold;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ПОВЕСТКИ ===== -->
+<div class="modal-overlay conscription-modal" id="conscriptionModal">
+  <div class="modal-box">
+    <h3>📜 ПОВЕСТКА НА СВО</h3>
+    <p style="font-size:1.2rem; text-align:center; margin:20px 0;">
+      Ты призван! Скуф, ты нужен Родине!<br>
+      <span style="font-size:0.9rem; color:#b38b54;">(шанс был маленький, но ты долго сидел)</span>
+    </p>
+    <p style="font-size:1rem; color:#ccc; text-align:center;">Выбери вариант:</p>
+    <div class="nav-buttons" style="justify-content:center; margin-top:20px;">
+      <button id="conscriptYes1" style="flex:1; background:#a93226;">✅ Да</button>
+      <button id="conscriptYes2" style="flex:1; background:#a93226;">✅ Да</button>
+    </div>
+    <p style="font-size:0.8rem; color:#888; text-align:center; margin-top:16px;">(выбора нет, скуф)</p>
+  </div>
+</div>
+
 <script>
   (function(){
+    // ========== ОБЩИЕ ФУНКЦИИ ДЛЯ МОДАЛОК ==========
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
     // ========== ЧАТ ==========
     const chatBox = document.getElementById('chatBox');
     const chatInput = document.getElementById('chatInput');
@@ -507,7 +607,8 @@
     const skufNames = [
       'Колян', 'Димон', 'Серёга', 'Петрович', 'Васян',
       'Михалыч', 'Толик', 'Гриша', 'Санёк', 'Вован',
-      'Лёха', 'Борян', 'Кузьмич', 'Фёдор', 'Игнат'
+      'Лёха', 'Борян', 'Кузьмич', 'Фёдор', 'Игнат',
+      'Егорыч', 'Саныч', 'Палыч', 'Геннадич'
     ];
 
     const skufPhrases = [
@@ -541,7 +642,32 @@
       'На заводе слышал, новый танк делают — Т-14, но я в Ладу больше верю.',
       'Пиво и Лада — два главных друга скуфа.',
       'А вы видели, как Лада по бездорожью едет? Как танк!',
-      'Завод — наша крепость, а Лада — наша броня.'
+      'Завод — наша крепость, а Лада — наша броня.',
+      'Свекровь опять приехала — пришлось прятать пиво в Ладу.',
+      'Теща сказала, что я скуф — а я горжусь!',
+      'Жена ругает, что я на заводе пропадаю, а там такое пиво!',
+      'Свекровь пироги печёт, а я их под пиво уминаю.',
+      'Теща Ладу мою критикует, а сама в такси ездит.',
+      'Жена говорит: "Ты или пиво, или я". Ну я выбрал пиво, и Ладу заодно.',
+      'Свекровь приехала с проверкой — пришлось танк в гараже прятать.',
+      'Теща спрашивает: "Что ты там на заводе делаешь?" А я пью пиво с мужиками.',
+      'Жена Ладу не ценит, а я ей говорю: "Это наша броня!"',
+      'Свекровь узнала, что я скуф, теперь зовёт меня "танкист".',
+      'Теща заставила мыть Ладу — а я её вчера на танке возил.',
+      'Жена ушла к маме, а я остался с пивом и Ладой — рай!',
+      'Свекровь принесла соленья — отличная закуска под пиво.',
+      'Теща говорит: "Ты бы хоть жене цветы дарил". А я ей — банку пива!',
+      'Жена требует ремонт, а я на заводе — там и так ремонт.',
+      'Свекровь звонит каждый день, я делаю вид, что на танке еду.',
+      'Теща угощает пирогами, а я говорю: "Лучше бы пиво принесла".',
+      'Жена нашла в Ладе пустые банки — пришлось сказать, что это для завода.',
+      'Свекровь считает, что скуфы — это герои, так что я в почёте.',
+      'Теща подарила мне чехол на сиденье Лады — теперь я король скуфов!',
+      'Жена обижается, что я с Ладой разговариваю, а она же моя подруга!',
+      'Свекровь приехала на тракторе — сказала, что это тоже скуф-мобиль.',
+      'Теща варит борщ, а я его запиваю пивом — и всем доволен.',
+      'Жена сказала: "Выбирай: я или пиво". Я взял пиво и поехал на завод.',
+      'Свекровь ругает, что я на танке катаюсь, а не на Ладе — но танк тоже наш!'
     ];
 
     function getRandomSkufMessage() {
@@ -621,7 +747,7 @@
       factoryRow.appendChild(div);
     });
 
-    // ========== ИГРА ==========
+    // ========== ИГРА (автозапуск, пофикшена) ==========
     const gameField = document.getElementById('gameField');
     const scoreSpan = document.getElementById('gameScore');
     const livesSpan = document.getElementById('gameLives');
@@ -702,95 +828,116 @@
     }
 
     function startGame() {
+      // Останавливаем старые интервалы
+      if (spawnInterval) clearInterval(spawnInterval);
+      if (gameInterval) clearInterval(gameInterval);
+      // Очищаем поле
       items.forEach(el => el.remove());
       items = [];
       score = 0; lives = 5;
       gameRunning = true; paused = false;
       updateScore(); updateLives();
-      if (spawnInterval) clearInterval(spawnInterval);
-      if (gameInterval) clearInterval(gameInterval);
       spawnInterval = setInterval(createFallingItem, 800);
       gameInterval = setInterval(gameLoop, 30);
       document.getElementById('pauseGameBtn').textContent = '⏸️ Пауза';
     }
 
+    // Пауза
     document.getElementById('pauseGameBtn').addEventListener('click', function() {
       if (!gameRunning) return;
       paused = !paused;
       this.textContent = paused ? '▶️ Продолжить' : '⏸️ Пауза';
-      if (paused) { clearInterval(spawnInterval); clearInterval(gameInterval); }
-      else { spawnInterval = setInterval(createFallingItem, 800); gameInterval = setInterval(gameLoop, 30); }
+      if (paused) {
+        clearInterval(spawnInterval);
+        clearInterval(gameInterval);
+      } else {
+        spawnInterval = setInterval(createFallingItem, 800);
+        gameInterval = setInterval(gameLoop, 30);
+      }
     });
 
     document.getElementById('resetGameBtn').addEventListener('click', function() {
-      clearInterval(spawnInterval); clearInterval(gameInterval); startGame();
+      startGame(); // полностью перезапускаем
     });
 
+    // АВТОЗАПУСК ИГРЫ
     startGame();
 
-    // ========== ВЫЗОВ АЛЬТУШКИ (МОДАЛКА) ==========
-    const modal = document.getElementById('altModal');
-    const closeBtn = document.getElementById('modalCloseBtn');
+    // ========== ВЫЗОВ АЛЬТУШКИ (исправлен) ==========
+    const altModal = document.getElementById('altModal');
+    const closeAltBtn = document.getElementById('modalCloseAlt');
     const callBtn = document.getElementById('callAltBtn');
 
-    function openModal() { modal.classList.add('active'); }
-    function closeModal() { modal.classList.remove('active'); }
-
-    callBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
-
-    // Шаги
-    let currentStep = 1;
-    const steps = document.querySelectorAll('.modal-step');
-
-    function showStep(step) {
-      steps.forEach(el => el.classList.remove('active'));
-      document.querySelector(`.modal-step[data-step="${step}"]`).classList.add('active');
-      currentStep = step;
+    function openAltModal() {
+      // Сброс полей и шагов
+      document.getElementById('ladaNumber').value = '';
+      document.getElementById('cardNumber').value = '';
+      showAltStep(1);
+      altModal.classList.add('active');
     }
 
-    // Шаг 1 → 2
-    document.getElementById('step1Next').addEventListener('click', function() {
+    function closeAltModal() {
+      altModal.classList.remove('active');
+    }
+
+    callBtn.addEventListener('click', openAltModal);
+    closeAltBtn.addEventListener('click', closeAltModal);
+    altModal.addEventListener('click', function(e) { if (e.target === altModal) closeAltModal(); });
+
+    let currentAltStep = 1;
+    const altSteps = altModal.querySelectorAll('.modal-step');
+
+    function showAltStep(step) {
+      altSteps.forEach(el => el.classList.remove('active'));
+      altModal.querySelector(`.modal-step[data-step="${step}"]`).classList.add('active');
+      currentAltStep = step;
+    }
+
+    document.getElementById('step1NextAlt').addEventListener('click', function() {
       const lada = document.getElementById('ladaNumber').value.trim();
       if (!lada) { alert('Введи номер Лады, скуф!'); return; }
-      showStep(2);
+      showAltStep(2);
       generateQuiz();
     });
 
-    // Назад на шаг 1
-    document.getElementById('step2Back').addEventListener('click', function() { showStep(1); });
+    document.getElementById('step2BackAlt').addEventListener('click', function() { showAltStep(1); });
 
-    // Шаг 2 → 3 (после теста)
-    document.getElementById('step2Next').addEventListener('click', function() {
-      const radios = document.querySelectorAll('input[name="quiz"]:checked');
-      if (radios.length < 4) { alert('Ответь на все вопросы, скуф!'); return; }
-      let score = 0;
-      radios.forEach(r => { if (r.value === 'true') score++; });
-      if (score < 3) {
+    document.getElementById('step2NextAlt').addEventListener('click', function() {
+      const quizGroups = document.querySelectorAll('#quizContainer .quiz-options');
+      let allAnswered = true;
+      quizGroups.forEach(group => {
+        const radios = group.querySelectorAll('input[type="radio"]');
+        const checked = Array.from(radios).some(r => r.checked);
+        if (!checked) allAnswered = false;
+      });
+      if (!allAnswered) { alert('Ответь на все вопросы, скуф!'); return; }
+
+      const allRadios = document.querySelectorAll('#quizContainer input[type="radio"]:checked');
+      let correctCount = 0;
+      allRadios.forEach(r => { if (r.value === 'true') correctCount++; });
+
+      if (correctCount < 3) {
         alert('Ты не скуф! Альтушка не придёт. Иди пей пиво и становись скуфом!');
-        closeModal();
+        closeAltModal();
         return;
       }
-      showStep(3);
+      showAltStep(3);
     });
 
-    // Шаг 3 → 4
-    document.getElementById('step3Next').addEventListener('click', function() {
+    document.getElementById('step3BackAlt').addEventListener('click', function() { showAltStep(2); });
+
+    document.getElementById('step3NextAlt').addEventListener('click', function() {
       const card = document.getElementById('cardNumber').value.trim();
       if (!card) { alert('Введи номер карты (хоть что-нибудь)'); return; }
-      showStep(4);
-      document.getElementById('resultText').innerHTML = `
+      showAltStep(4);
+      document.getElementById('resultTextAlt').innerHTML = `
         🎉 Альтушка уже в пути! Она едет на Ладе, везёт пиво и танк!<br>
         <span style="font-size:1rem; color:#b38b54;">(на самом деле она просто забила на тебя, но ты молодец!)</span>
       `;
     });
 
-    document.getElementById('step3Back').addEventListener('click', function() { showStep(2); });
+    document.getElementById('resultDoneAlt').addEventListener('click', closeAltModal);
 
-    document.getElementById('resultDone').addEventListener('click', closeModal);
-
-    // Генерация теста
     function generateQuiz() {
       const container = document.getElementById('quizContainer');
       const questions = [
@@ -808,7 +955,7 @@
           const isCorrect = (oi === q.correct);
           div.innerHTML += `
             <label>
-              <input type="radio" name="quiz" value="${isCorrect}"> ${opt}
+              <input type="radio" name="quiz_${idx}" value="${isCorrect}"> ${opt}
             </label>
           `;
         });
@@ -817,30 +964,123 @@
       });
     }
 
-    // При открытии модалки сбрасываем на первый шаг
-    modal.addEventListener('DOMNodeInserted', function() {
-      // но лучше сделать при клике на кнопку вызова
+    // ========== ЗАГРУЗКА ФОТО ЛАДЫ ==========
+    const ladaModal = document.getElementById('ladaPhotoModal');
+    const closeLadaBtn = document.getElementById('modalCloseLada');
+    const ladaBtn = document.getElementById('ladaPhotoBtn');
+    const ladaFileInput = document.getElementById('ladaFileInput');
+    const ladaPreview = document.getElementById('ladaPreview');
+
+    ladaBtn.addEventListener('click', function() {
+      ladaPreview.innerHTML = '';
+      ladaFileInput.value = '';
+      ladaModal.classList.add('active');
+    });
+    closeLadaBtn.addEventListener('click', function() { ladaModal.classList.remove('active'); });
+    ladaModal.addEventListener('click', function(e) { if (e.target === ladaModal) ladaModal.classList.remove('active'); });
+
+    ladaFileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          ladaPreview.innerHTML = `<img src="${ev.target.result}" alt="Фото Лады">`;
+        };
+        reader.readAsDataURL(file);
+      }
     });
 
-    // Переопределим открытие, чтобы сбрасывать состояние
-    const originalOpen = openModal;
-    openModal = function() {
-      // сброс
-      document.getElementById('ladaNumber').value = '';
-      document.getElementById('cardNumber').value = '';
-      showStep(1);
-      originalOpen();
-    };
-    callBtn.addEventListener('click', openModal);
+    document.getElementById('ladaUploadBtn').addEventListener('click', function() {
+      const previewImg = ladaPreview.querySelector('img');
+      if (previewImg) {
+        addSkufMessage('Скуф-фотограф', '📸 Смотрите, какая Лада! Красота!');
+        ladaModal.classList.remove('active');
+      } else {
+        alert('Сначала выбери фото, скуф!');
+      }
+    });
 
-    // Закрытие по Escape
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+    // ========== ФЕЙК-РЕГИСТРАЦИЯ ==========
+    const regModal = document.getElementById('regModal');
+    const closeRegBtn = document.getElementById('modalCloseReg');
+    const regBtn = document.getElementById('regBtn');
+    const regLogin = document.getElementById('regLogin');
+    const regPass = document.getElementById('regPass');
+    const regPass2 = document.getElementById('regPass2');
+    const regResult = document.getElementById('regResult');
 
+    regBtn.addEventListener('click', function() {
+      regLogin.value = '';
+      regPass.value = '';
+      regPass2.value = '';
+      regResult.textContent = '';
+      regModal.classList.add('active');
+    });
+    closeRegBtn.addEventListener('click', function() { regModal.classList.remove('active'); });
+    regModal.addEventListener('click', function(e) { if (e.target === regModal) regModal.classList.remove('active'); });
+
+    document.getElementById('regSubmitBtn').addEventListener('click', function() {
+      const login = regLogin.value.trim();
+      const pass = regPass.value.trim();
+      const pass2 = regPass2.value.trim();
+      if (!login) { regResult.textContent = '❌ Введи логин, скуф!'; regResult.style.color = '#e74c3c'; return; }
+      if (pass.length < 4) { regResult.textContent = '❌ Пароль должен быть не короче 4 символов!'; regResult.style.color = '#e74c3c'; return; }
+      if (pass !== pass2) { regResult.textContent = '❌ Пароли не совпадают!'; regResult.style.color = '#e74c3c'; return; }
+      regResult.textContent = '✅ Регистрация успешна! Добро пожаловать, скуф! (никто не запомнил твои данные)';
+      regResult.style.color = '#7d9b5a';
+      setTimeout(() => {
+        regModal.classList.remove('active');
+        addSkufMessage('Система', `📝 Зарегистрирован новый скуф: ${login}`);
+      }, 1500);
+    });
+
+    // ========== ПОВЕСТКА НА СВО ==========
+    const conscriptionModal = document.getElementById('conscriptionModal');
+    let conscriptionChance = 0.005;
+    const maxChance = 0.5;
+    let conscriptionActive = false;
+
+    function showConscription() {
+      if (conscriptionActive) return;
+      conscriptionActive = true;
+      conscriptionModal.classList.add('active');
+      addSkufMessage('Военком', '⚠️ Повестка на СВО! Скуф, ты нам нужен!');
+    }
+
+    function closeConscription() {
+      conscriptionModal.classList.remove('active');
+      conscriptionActive = false;
+      conscriptionChance = 0.005;
+    }
+
+    document.getElementById('conscriptYes1').addEventListener('click', function() {
+      closeConscription();
+      addSkufMessage('Скуф-герой', 'Я иду на СВО! За Родину! (и за пиво)');
+    });
+    document.getElementById('conscriptYes2').addEventListener('click', function() {
+      closeConscription();
+      addSkufMessage('Скуф-патриот', 'Готов служить! Только Ладу и танк с собой возьму.');
+    });
+
+    function conscriptionTick() {
+      if (conscriptionActive) return;
+      conscriptionChance = Math.min(conscriptionChance + 0.002, maxChance);
+      if (Math.random() < conscriptionChance) {
+        showConscription();
+      }
+    }
+
+    setInterval(conscriptionTick, 10000);
+
+    // ========== ЧИСТКА ИНТЕРВАЛОВ ПРИ ВЫХОДЕ ==========
     window.addEventListener('beforeunload', function() {
       clearInterval(chatInterval);
       clearInterval(spawnInterval);
       clearInterval(gameInterval);
     });
+
+    // Делаем функции глобальными для вызова из onclick
+    window.closeModal = closeModal;
 
   })();
 </script>
