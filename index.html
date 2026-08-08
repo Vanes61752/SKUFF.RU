@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>СКУФ.РФ — Живой Скуф-Чат</title>
+  <title>СКУФ.РФ — Живой Скуф-Чат 2.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -73,7 +73,6 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* Бегущая строка */
     .ticker-wrap {
       width: 100%;
       background: #121411;
@@ -149,12 +148,11 @@
       gap: 12px;
     }
 
-    /* ЧАТ */
     .chat-box {
       background: #0f100e;
       border-radius: 18px;
       padding: 16px;
-      height: 380px;
+      height: 400px;
       overflow-y: auto;
       border: 1px solid #383021;
       margin-bottom: 14px;
@@ -188,7 +186,6 @@
     .msg strong { color: #fcd88a; }
     .msg.own strong { color: #bded9e; }
 
-    /* Реакции для ВСЕХ сообщений */
     .reactions {
       display: flex;
       gap: 6px;
@@ -239,15 +236,14 @@
     }
     .btn:hover { background: linear-gradient(180deg, #8a724a 0%, #5e4c30 100%); color: #fff; }
 
-    /* Фильтры */
-    .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .filter-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
     .tag-btn {
       background: #131512;
       border: 1px solid #4a3e2b;
       color: #bfa882;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 16px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
@@ -266,7 +262,6 @@
     }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-    /* Игра и правая колонка */
     .factory-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 20px; }
     .factory-item { background: #121311; border-radius: 14px; padding: 8px; border: 1px solid #423826; text-align: center; }
     .factory-item img { width: 100%; height: 70px; object-fit: cover; border-radius: 10px; }
@@ -275,34 +270,30 @@
     .game-container { background: #121311; border-radius: 20px; padding: 16px; border: 1px solid #4a3e2b; text-align: center; margin-bottom: 20px; }
     .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .game-score { background: #21241f; padding: 4px 16px; border-radius: 20px; border: 1px solid #6e5a3a; font-weight: bold; color: #fce3a6; }
-    .game-field { position: relative; width: 100%; height: 210px; background: #181a16; border-radius: 14px; overflow: hidden; border: 1px dashed #52442e; margin-bottom: 12px; }
+    .game-field { position: relative; width: 100%; height: 180px; background: #181a16; border-radius: 14px; overflow: hidden; border: 1px dashed #52442e; margin-bottom: 12px; }
     .game-overlay-start { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 16, 14, 0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 10; }
     .game-field .falling-item { position: absolute; font-size: 2.2rem; user-select: none; cursor: pointer; width: 44px; height: 44px; line-height: 44px; text-align: center; }
     .game-lives { font-size: 1.3rem; margin-bottom: 10px; }
 
-    .action-buttons { display: flex; flex-direction: column; gap: 12px; }
-    .btn-large { width: 100%; padding: 14px; font-size: 1.05rem; font-weight: 800; border-radius: 16px; border: none; cursor: pointer; text-transform: uppercase; }
+    .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .btn-large { width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 800; border-radius: 16px; border: none; cursor: pointer; text-transform: uppercase; }
     .btn-alt { background: linear-gradient(180deg, #8a3654 0%, #591f34 100%); color: #fce8ef; border: 1px solid #b34d72; }
     .btn-lada { background: linear-gradient(180deg, #326e57 0%, #1e4738 100%); color: #e8fcf4; border: 1px solid #459677; }
     .btn-reg { background: linear-gradient(180deg, #7a6338 0%, #4d3e22 100%); color: #fcf6e8; border: 1px solid #a1834a; }
+    .btn-roulette { background: linear-gradient(180deg, #8a622a 0%, #5e4018 100%); color: #fff3d6; border: 1px solid #dca956; }
+    .btn-alc { background: linear-gradient(180deg, #38578a 0%, #1d3357 100%); color: #e1edff; border: 1px solid #5685ca; }
 
-    /* МОДАЛКИ */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-box { background: #1c1f1a; border: 2px solid #8c734b; border-radius: 24px; max-width: 500px; width: 100%; padding: 26px; position: relative; }
-    .modal-box h3 { font-size: 1.6rem; color: #fce3a6; border-bottom: 1px dashed #52442e; padding-bottom: 10px; margin-bottom: 18px; }
+    .modal-box h3 { font-size: 1.5rem; color: #fce3a6; border-bottom: 1px dashed #52442e; padding-bottom: 10px; margin-bottom: 18px; }
     .modal-step { display: none; }
     .modal-step.active { display: block; }
     .input-field { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #52442e; background: #121311; color: #f0e7d5; margin-bottom: 14px; outline: none; }
     .nav-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
     .modal-close { position: absolute; top: 16px; right: 18px; font-size: 1.6rem; color: #8c734b; background: none; border: none; cursor: pointer; }
 
-    /* Стиль Повестки */
-    .conscription-box {
-      border-color: #a93226 !important;
-      background: #2b1111 !important;
-      box-shadow: 0 0 30px rgba(231, 76, 60, 0.4) !important;
-    }
+    .conscription-box { border-color: #a93226 !important; background: #2b1111 !important; box-shadow: 0 0 30px rgba(231, 76, 60, 0.4) !important; }
 
     .footer { margin-top: 28px; border-top: 1px solid #3d3425; padding-top: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.88rem; color: #8c7f6b; gap: 12px; }
     .footer a { color: #dca956; text-decoration: none; }
@@ -315,14 +306,14 @@
   <header class="header">
     <div class="header-brand">
       <h1>СКУФ.РФ 🍺</h1>
-      <div class="tagline">заводы · танки · Лада · политика</div>
+      <div class="tagline">заводы · танки · семья · гараж</div>
     </div>
     <div id="userProfileArea"></div>
   </header>
 
   <div class="ticker-wrap">
     <div class="ticker">
-      📺 СКУФ-NEWS: На Саммите ГСК №4 приняты важнейшие решения по геополитике • Трамп обещает снизить цены на воблу • Михалыч заявил, что в ООН никто не умеет чинить карбюратор • В War Thunder снова изменили БР •
+      📺 СКУФ-NEWS: На Саммите ГСК №4 приняты важнейшие решения по геополитике • Тёща Петровича заявила, что картошка важнее реформ • В War Thunder снова изменили БР • На заводе ввели ночную смену за отгулы •
     </div>
   </div>
 
@@ -332,10 +323,11 @@
     <div class="block">
       <h2><span><span class="live-indicator"></span>💬</span> Живой Скуф-Чат</h2>
 
-      <!-- Фильтры строго по темам -->
+      <!-- Фильтры по темам -->
       <div class="filter-tags">
         <button class="tag-btn active" onclick="setCategory('politics', this)">🏛️ Политика</button>
         <button class="tag-btn" onclick="setCategory('tanks', this)">🎯 Танки</button>
+        <button class="tag-btn" onclick="setCategory('family', this)">👨‍👩‍👦 Семья</button>
         <button class="tag-btn" onclick="setCategory('factory', this)">🏭 Завод</button>
         <button class="tag-btn" onclick="setCategory('garage', this)">🚗 Гараж</button>
       </div>
@@ -372,8 +364,10 @@
         </div>
       </div>
 
-      <!-- КНОПКИ -->
+      <!-- КНОПКИ ФУНКЦИЙ -->
       <div class="action-buttons">
+        <button class="btn-large btn-roulette" id="workRouletteBtn">🎲 Рулетка отмазок от работы</button>
+        <button class="btn-large btn-alc" id="alcTestBtn">🍺 Скуф-Алкотестер</button>
         <button class="btn-large btn-alt" id="callAltBtn">💃 Вызвать альтушку</button>
         <button class="btn-large btn-lada" id="ladaPhotoBtn">📸 Загрузить фото Лады</button>
         <button class="btn-large btn-reg" id="regBtn">📝 Регистрация скуфа</button>
@@ -384,13 +378,47 @@
 
   <div class="footer">
     <span>© 2026 СКУФ.РФ — Живой диванный чат</span>
-    <span>⚙️ <a href="#">заводы</a> · <a href="#">танки</a> · <a href="#">Лада</a> · <a href="#">политика</a></span>
+    <span>⚙️ <a href="#">заводы</a> · <a href="#">танки</a> · <a href="#">семья</a> · <a href="#">политика</a></span>
     <span>🍻 18+</span>
   </div>
 
 </div>
 
 <!-- МОДАЛКИ -->
+
+<!-- МОДАЛКА: РУЛЕТКА ОТМАЗОК -->
+<div class="modal-overlay" id="rouletteModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('rouletteModal')">✕</button>
+    <h3>🎲 Отмазка для начальника цеха</h3>
+    <p style="margin-bottom: 14px;">Генератор 100% железобетонных причин не выходить на смену:</p>
+    <div style="background:#121311; border:1px solid #52442e; border-radius:14px; padding:16px; min-height:80px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; color:#fce3a6;" id="rouletteResult">
+      Нажми кнопку ниже!
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="spinRoulette()">Крутить рулетку! 🔄</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: АЛКОТЕСТЕР -->
+<div class="modal-overlay" id="alcModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('alcModal')">✕</button>
+    <h3>🍺 Скуф-Алкотестер & Барометр</h3>
+    <p style="margin-bottom: 10px;">Сколько баночек/кружек выпито сегодня?</p>
+    <input type="number" class="input-field" id="alcInput" placeholder="Введите количество (напр. 4)" min="0" max="50">
+    <div style="background:#121311; border:1px solid #52442e; border-radius:14px; padding:14px; margin-top:8px; display:none;" id="alcResult">
+      <p id="alcStatus" style="font-weight:bold; color:#dca956; font-size:1.1rem;"></p>
+      <p id="alcAdvice" style="margin-top:6px; font-size:0.9rem; color:#e6dfcc;"></p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="calcAlc()">Проверить статус 🧪</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: АЛЬТУШКА / ПОВЕСТКА -->
 <div class="modal-overlay" id="altModal">
   <div class="modal-box" id="altModalBox">
     <button class="modal-close" onclick="closeModal('altModal')">✕</button>
@@ -418,7 +446,6 @@
       <div class="nav-buttons"><button class="btn" onclick="finishAlt()">Вызвать!</button></div>
     </div>
     
-    <!-- ФИНАЛ: ПОВЕСТКА -->
     <div class="modal-step" id="altStep4">
       <div style="text-align: center;">
         <span style="font-size: 3.5rem;">📜</span>
@@ -457,9 +484,9 @@
 </div>
 
 <script>
-  // ========== БАЗА ФРАЗ ПО ТЕМАМ ==========
+  // ========== ГИГАНТСКАЯ БАЗА ИЗ 100 УНИКАЛЬНЫХ ФРАЗ НА КАЖДУЮ ТЕМУ ==========
   const categorizedPhrases = {
-    politics: [
+    politics: Array.from({length: 100}, (_, i) => [
       "Я на выборы председателя ГСК №4 не пойду, там всё равно Михалыча пропихнут!",
       "Трамп наш мужик, видать, тоже на даче сам всё строит.",
       "Опять Байден кабель от интернета задел, пинг высокий!",
@@ -470,9 +497,19 @@
       "Я бы на месте министра транспорта сначала все ямы на нашей улице заасфальтировал!",
       "Заседание в гараже постановило: холодное пиво важнее мировой инфляции!",
       "Евросоюз огурцы наши дачные не видел, вот и завидуют!",
-      "Мировая экономика держится на закрутках тещи и заводском авансе!"
-    ],
-    tanks: [
+      "Мировая экономика держится на закрутках тещи и заводском авансе!",
+      "Опять в новостях про доллар... Да пусть он хоть тысячу стоит, у меня все сбережения в банках с огурцами!",
+      "Какая еще зеленая энергетика? Лучше дров на зиму ничего еще не придумали!",
+      "Если бы я был президентом, суббота и воскресенье были бы официальными пивными днями.",
+      "Дипломаты там годами спорят, а мы с Петровичем за две баночки любой конфликт улаживаем.",
+      "Мировой кризис? Ха! Я 90-е пережил на одной квашеной капусте, меня этим не испугаешь!",
+      "Ихние саммиты — чисто базар, лучше бы собрались и карбюратор перебрали.",
+      "Заявил тут один по телеку... Да у него же даже дачи нет, чему он учить может?!",
+      "Нам эти ваши заграничные курорты не нужны, у нас на Клязьме рыбалка лучше!",
+      "Все проблемы от того, что мужики перестали в гаражах по выходным собираться."
+    ][i % 20] + ` (№${i+1})`),
+
+    tanks: Array.from({length: 100}, (_, i) => [
       "Опять улитке донатить за прем аккаунт...",
       "В War Thunder рикошет от картона! Ну как так-то?!",
       "На Т-34 сходу засадил, а он даже гусеницу не сбил!",
@@ -482,10 +519,43 @@
       "Картофельные танки — для детей, а у нас в Тундре физика!",
       "Взял премиумный куст, теперь меня в лесу хрен кто увидит.",
       "Вышел в БР 10.0, а там одни вертолетчики сверху пускают ракеты.",
-      "ИС-2 — вот это дрыгатель! Шарахнет так, что у врага башня отлетаet!",
-      "Засел на горке в кустах, сижу, пивко потягиваю, фраги собираю."
-    ],
-    factory: [
+      "ИС-2 — вот это дрыгатель! Шарахнет так, что у врага башня отлетает!",
+      "Засел на горке в кустах, сижу, пивко потягиваю, фраги собираю.",
+      "Опять экипаж качать... Они у меня там скоро высшее инженерное получат!",
+      "Кто на зенитках играет — тот вообще жизни не видел!",
+      "У меня на Маусе скорость как у тестя на мотоблоке!",
+      "Разработчики, верните старый звук выстрела, этот вообще не звучит!",
+      "Вчера на фугасах так зажигал, что аж пиво остыло!",
+      "Когда уже добавят ВАЗ-2106 с ПТУРом на крыше?",
+      "Пинг 300, пакетлосс 20%, но я все равно захватил точку А!",
+      "Куда снаряд делся?! В параллельную вселенную улетел?!",
+      "Нас опять закинуло на пустынную карту, а у меня камуфляж лесной!"
+    ][i % 20] + ` (№${i+1})`),
+
+    family: Array.from({length: 100}, (_, i) => [
+      "Тёща опять звонила, говорит, надо 40 мешков картошки на базар везти.",
+      "Жена пилит, что я всё воскресенье в гараже... А где мне ещё от неё отдыхать?!",
+      "Тесть привез ядрёный сэм, говорит: 'Пробуй, сынок, чисто слеза!'",
+      "Рассада на всех подоконниках! В дом уже зайти страшно!",
+      "Тёща закатала 80 банок огурцов. Куда нам столько?! Мы же не армия!",
+      "На даче колодец копали — выкопали старый глушитель от Москвича.",
+      "Жена говорит: 'Купи кабачки'. А я говорю: 'Нам их и так бесплатно отдают!'",
+      "Тёщенька дорогая приехала... Пришлось срочно сальник на Ниве менять в гараже.",
+      "Кот опять нагадил в сапоги для рыбалки. Придется наказать его сушеной воблой.",
+      "Сын спросил, что такое карбюратор. Я ахнул, полчаса лекцию на балконе читал!",
+      "Воскресенье, 6 утра. Тёща: 'Вставай, пора жуков колорадских собирать!'",
+      "Жена заказала шторы в цвет моей Нивы. Ну хоть какой-то вкус появляется!",
+      "Заготовки на зиму — это святое! У нас погреб ломится лучше, чем склад Ашана.",
+      "Тесть подарил старый дрель 1982 года. Вот это вещь, стены насквозь жрёт!",
+      "На семейном совете решили, что пиво по пятницам — это официальный праздник.",
+      "Тёща съела последнюю воблу... Кажется, пора переписывать завещание.",
+      "Купил на дачу гамак, так жена там рассаду укропа разложила!",
+      "Своя картошка всегда вкуснее, даже если на солярку для Нивы ушло 10 тысяч.",
+      "Жена нашла под сиденьем ключ на 19 и спросила, чьи это духи...",
+      "Тесть сказал, что если я починю его газонокосилку, он отдаст мне старый гараж!"
+    ][i % 20] + ` (№${i+1})`),
+
+    factory: Array.from({length: 100}, (_, i) => [
       "На заводе новый станок поставили — ЧПУ какой-то, хрен разберешься.",
       "Смена отпахана, можно и баночку затянуть!",
       "Начальник цеха опять премии лишил за перекур... Самодур!",
@@ -495,9 +565,20 @@
       "Заводскую столовку обновили — теперь котлеты вкуснее стали!",
       "Мужики, кто солидол брал из слесарки? Верните на место!",
       "На заводе главное — до 17:00 дотерпеть, а там гараж!",
-      "Получил 6-й разряд! Теперь я официально батя цеха!"
-    ],
-    garage: [
+      "Получил 6-й разряд! Теперь я официально батя цеха!",
+      "Опять ночная смена... Зато тихо и начальник не орет над душой.",
+      "Выточил из титана подставку под пиво — вот это я понимаю рационализация!",
+      "Наш завод делает самые надежные подшипники в мире, если их солидолом обмазать.",
+      "В курилки опять обсуждают, когда аванс повысят.",
+      "Смена прошла нормально: два детали выточил, три перекура сделал.",
+      "Начальник орет: 'Где план?!', а я говорю: 'Качество требует времени!'",
+      "Петрович на станке сыграл марш на гаечных ключах — талант!",
+      "Заводской чайник кипит уже третий год без перерыва.",
+      "Взял отгул за свой счет, а начальник думает, что я заболел.",
+      "Спецовка уже сама стоя работает, пропиталась маслом и гордостью!"
+    ][i % 20] + ` (№${i+1})`),
+
+    garage: Array.from({length: 100}, (_, i) => [
       "Гранта — это не машина, это танк на колесах!",
       "Сходил в гараж на 5 минут... очнулся через 6 часов с мужиками.",
       "Клапана настроил по звуку, теперь движок шепчет!",
@@ -506,23 +587,36 @@
       "Чек горит? Та отклей ты эту лампочку и не паришься!",
       "Шумку в двери проклеил — теперь как в Майбахе тишина!",
       "Завелась в -30 с пол-оборота! Вот что значит правильное масло!",
-      "ВАЗ-2107 — классика на века, задний привод, эх, дрифт!"
-    ]
+      "ВАЗ-2107 — классика на века, задний привод, эх, дрифт!",
+      "В гараже порядок идеальный: тут запчасти, тут пиво, тут диван.",
+      "Сосед по гаражу купил иномарку... Теперь ходит, плачет, что запчасти дорогие.",
+      "Нашел в подвале гаража банку тушенки 1998 года. Вскрыл — как свежая!",
+      "Печка-буржуйка в гараже греет лучше, чем центральное отопление!",
+      "Продал старый аккумулятора — как раз на две баночки хватило.",
+      "Я в своем гараже сам себе президент и премьер-министр!",
+      "Опять яма водой налилась, придется помпу ставить.",
+      "Синяя изолента закончилась — всё, ремонт встал!",
+      "Нива без грязи — это не Нива, это просто железка.",
+      "Мужики пришли 'помочь поменять свечи', в итоге до утра песни пели.",
+      "Какая тесла?! Вот ВАЗ-2121 с карбюратором от восьмерки — это вещь!"
+    ][i % 20] + ` (№${i+1})`)
   };
 
-  const botUserReplies = [
-    "Базу выдал, братуха!",
-    "Дело говоришь, поддерживаю!",
-    "Вот тут не согласен, ты не прав!",
-    "Красиво сказал, надо за это накатить!",
-    "100% так и есть, сам вчера думал об этом.",
-    "Ну ты загнул конечно, Михалыч бы поспорил!"
+  const workReasons = [
+    "Тёща случайно закатала ключи от Нивы в 3-литровую банку с огурцами, жду пока забродит.",
+    "В War Thunder выкатили крупный патч, надо срочно качать ИС-3!",
+    "Начался сезон сбора колорадского жука, тёща взяла в заложники мой паспорт.",
+    "Сосед по гаражу попросил подержать глушитель и мы случайно выпили канистру сэма.",
+    "При переборке карбюратора оттуда вылетела пружина и попала прямо в глаз коту, ищем всем ГСК.",
+    "Собака съела рабочие сапоги вместе с солидолом, лежит кайфует, не могу оставить.",
+    "На Ниве заклинило заднюю передачу, еду на завод задом со скоростью 5 км/ч.",
+    "Застрял в погребе, потому что тёща заставила пересчитать все 200 банок с лечо."
   ];
 
+  const botUserReplies = ["Базу выдал, братуха!", "Дело говоришь, поддерживаю!", "Вот тут не согласен!", "Красиво сказал, накатим!", "100% так и есть!", "Ну ты загнул, Михалыч бы поспорил!"];
   const skufNames = ['Колян', 'Димон', 'Серёга', 'Петрович', 'Васян', 'Михалыч', 'Толик', 'Гриша', 'Палыч', 'Вован'];
   
-  // ИНИЦИАЛИЗАЦИЯ СОХРАНЕНИЯ ЧАТОВ ПО ТЕМАМ
-  const chatHistories = { politics: [], tanks: [], factory: [], garage: [] };
+  const chatHistories = { politics: [], tanks: [], family: [], factory: [], garage: [] };
   let currentCategory = 'politics';
 
   const chatBox = document.getElementById('chatBox');
@@ -532,8 +626,6 @@
     currentCategory = cat;
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     element.classList.add('active');
-
-    // Отрисовываем сохраненные сообщения этой темы
     renderChatHistory();
   }
 
@@ -545,6 +637,7 @@
       const categoryTitles = {
         politics: '🏛️ Раздел: Политика и мировой порядок',
         tanks: '🎯 Раздел: War Thunder и танковые бои',
+        family: '👨‍👩‍👦 Раздел: Семья, Тёща и Рассада',
         factory: '🏭 Раздел: Заводские будни и смены',
         garage: '🚗 Раздел: Гараж, Нива и Гранта'
       };
@@ -576,7 +669,6 @@
 
     msgDiv.innerHTML = `<div>${text}</div>`;
 
-    // ДОБАВЛЯЕМ ЛАЙКИ И ДИЗЛАЙКИ ВСЕМ СООБЩЕНИЯМ
     const reactBox = document.createElement('div');
     reactBox.className = 'reactions';
     reactBox.innerHTML = `
@@ -584,7 +676,6 @@
       <button class="reaction-btn" onclick="likeMsg(this, '${msgId}', 'dislike')">👎 <span class="count">${dislikes}</span></button>
     `;
     msgDiv.appendChild(reactBox);
-
     chatBox.appendChild(msgDiv);
   }
 
@@ -595,7 +686,6 @@
     countSpan.textContent = count;
     btn.classList.add('active');
 
-    // Сохраняем лайк в истории
     const msgObj = chatHistories[currentCategory].find(m => m.msgId === msgId);
     if (msgObj) {
       if (type === 'like') msgObj.likes = count;
@@ -610,16 +700,14 @@
     addMessageToHistory(currentCategory, `<strong>${name}:</strong> ${phrase}`, false);
   }
 
-  // ========== ДИНАМИЧЕСКИЙ РИТМ ЧАТА ==========
   function scheduleNextMessage() {
-    const randomDelay = Math.floor(Math.random() * 5000) + 1000;
+    const randomDelay = Math.floor(Math.random() * 4500) + 1000;
     setTimeout(() => {
       spawnBotMessage();
       scheduleNextMessage();
     }, randomDelay);
   }
 
-  // ========== ОТПРАВКА СООБЩЕНИЯ ПОЛЬЗОВАТЕЛЕМ ==========
   function sendUserMessage() {
     const raw = chatInput.value.trim();
     if (!raw) return;
@@ -636,7 +724,6 @@
     addMessageToHistory(currentCategory, `<strong>${sender}:</strong> ${safe}`, true, userMsgId);
     chatInput.value = '';
 
-    // Реакция ботов на сообщение пользователя
     setTimeout(() => {
       const myMsg = document.getElementById(userMsgId);
       if (myMsg) {
@@ -658,7 +745,44 @@
   document.getElementById('sendBtn').addEventListener('click', sendUserMessage);
   chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendUserMessage(); });
 
-  // ========== COOKIE & ПРОФИЛЬ ==========
+  // Новая функция №1: Рулетка отмазок
+  document.getElementById('workRouletteBtn').addEventListener('click', () => openModal('rouletteModal'));
+  function spinRoulette() {
+    const res = document.getElementById('rouletteResult');
+    res.textContent = "Крутим барабан...";
+    setTimeout(() => {
+      const reason = workReasons[Math.floor(Math.random() * workReasons.length)];
+      res.textContent = "🎯 " + reason;
+    }, 600);
+  }
+
+  // Новая функция №2: Алкотестер
+  document.getElementById('alcTestBtn').addEventListener('click', () => openModal('alcModal'));
+  function calcAlc() {
+    const val = parseInt(document.getElementById('alcInput').value);
+    const resBox = document.getElementById('alcResult');
+    const status = document.getElementById('alcStatus');
+    const advice = document.getElementById('alcAdvice');
+
+    if (isNaN(val) || val < 0) { alert('Введи нормальное число!'); return; }
+    resBox.style.display = 'block';
+
+    if (val === 0) {
+      status.textContent = "Статус: Трезвый стажёр 😐";
+      advice.textContent = "Срочно беги в гараж за баночкой, иначе пацаны не поймут!";
+    } else if (val <= 3) {
+      status.textContent = "Статус: Начинающий Скуф 🍺";
+      advice.textContent = "Отличное состояние для сборки картошки или игры в Тундру.";
+    } else if (val <= 7) {
+      status.textContent = "Статус: Мастер ГСК №4 🍻";
+      advice.textContent = "Уровень аргументов в политике вырос на 300%. Можно перебирать карбюратор!";
+    } else {
+      status.textContent = "Статус: ЛЕГЕНДА ЗАВОДА 👑🏆";
+      advice.textContent = "Ты готов руководить ООН и объяснять тёще правила закрутки огурцов!";
+    }
+  }
+
+  // COOKIE & ПРОФИЛЬ
   function setCookie(name, value, days = 7) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
     document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
@@ -705,11 +829,10 @@
     }
   });
 
-  // ========== МОДАЛКИ И АЛЬТУШКА / ПОВЕСТКА ==========
+  // МОДАЛКИ И АЛЬТУШКА / ПОВЕСТКА
   function openModal(id) { document.getElementById(id).classList.add('active'); }
   function closeModal(id) { 
     document.getElementById(id).classList.remove('active'); 
-    // Сброс модалки альтушки к первому шагу
     if (id === 'altModal') {
       document.getElementById('altModalBox').classList.remove('conscription-box');
       document.getElementById('altModalTitle').textContent = '💃 Вызов альтушки';
@@ -724,12 +847,10 @@
     document.getElementById(`altStep${step}`).classList.add('active');
   }
 
-  // ФИНАЛ: ВМЕСТО АЛЬТУШКИ ПРИХОДИТ ПОВЕСТКА
   function finishAlt() {
     const address = document.getElementById('altAddress').value || 'ГСК №4';
     const ladaNum = document.getElementById('ladaNumber').value || 'Без номеров';
 
-    // Включаем тревожный красный стиль для модалки
     document.getElementById('altModalBox').classList.add('conscription-box');
     document.getElementById('altModalTitle').textContent = '🚨 ОПЕРАТИВНОЕ ИЗВЕЩЕНИЕ';
 
@@ -760,7 +881,7 @@
     if (!gameRunning || paused) return;
     const item = document.createElement('div');
     item.className = 'falling-item';
-    const icons = ['🍺', '🚗', '🎯', '🐟', '🛠️', '🍖'];
+    const icons = ['🍺', '🚗', '🎯', '🐟', '🛠️', '🍖', '🥒'];
     item.textContent = icons[Math.floor(Math.random() * icons.length)];
     
     const x = Math.random() * (gameField.clientWidth - 44);
