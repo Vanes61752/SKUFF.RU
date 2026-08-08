@@ -188,7 +188,7 @@
     .msg strong { color: #fcd88a; }
     .msg.own strong { color: #bded9e; }
 
-    /* Блок реакций (Лайки) */
+    /* Реакции для ВСЕХ сообщений */
     .reactions {
       display: flex;
       gap: 6px;
@@ -286,6 +286,7 @@
     .btn-lada { background: linear-gradient(180deg, #326e57 0%, #1e4738 100%); color: #e8fcf4; border: 1px solid #459677; }
     .btn-reg { background: linear-gradient(180deg, #7a6338 0%, #4d3e22 100%); color: #fcf6e8; border: 1px solid #a1834a; }
 
+    /* МОДАЛКИ */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-box { background: #1c1f1a; border: 2px solid #8c734b; border-radius: 24px; max-width: 500px; width: 100%; padding: 26px; position: relative; }
@@ -295,6 +296,13 @@
     .input-field { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #52442e; background: #121311; color: #f0e7d5; margin-bottom: 14px; outline: none; }
     .nav-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
     .modal-close { position: absolute; top: 16px; right: 18px; font-size: 1.6rem; color: #8c734b; background: none; border: none; cursor: pointer; }
+
+    /* Стиль Повестки */
+    .conscription-box {
+      border-color: #a93226 !important;
+      background: #2b1111 !important;
+      box-shadow: 0 0 30px rgba(231, 76, 60, 0.4) !important;
+    }
 
     .footer { margin-top: 28px; border-top: 1px solid #3d3425; padding-top: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.88rem; color: #8c7f6b; gap: 12px; }
     .footer a { color: #dca956; text-decoration: none; }
@@ -384,14 +392,16 @@
 
 <!-- МОДАЛКИ -->
 <div class="modal-overlay" id="altModal">
-  <div class="modal-box">
+  <div class="modal-box" id="altModalBox">
     <button class="modal-close" onclick="closeModal('altModal')">✕</button>
-    <h3>💃 Вызов альтушки</h3>
+    <h3 id="altModalTitle">💃 Вызов альтушки</h3>
+    
     <div class="modal-step active" id="altStep1">
       <p>Введи госномер своей Лады:</p>
       <input type="text" class="input-field" id="ladaNumber" placeholder="А123ВС777" maxlength="9">
       <div class="nav-buttons"><button class="btn" onclick="nextAltStep(2)">Далее →</button></div>
     </div>
+    
     <div class="modal-step" id="altStep2">
       <p><strong>Проверка на тру-скуфа:</strong> Какой закусон к пиву лучший?</p>
       <div style="margin: 10px 0;">
@@ -401,16 +411,22 @@
       </div>
       <div class="nav-buttons"><button class="btn" onclick="nextAltStep(3)">Далее →</button></div>
     </div>
+    
     <div class="modal-step" id="altStep3">
-      <p>Куда отправлять Альтушку? (Номер гаража):</p>
-      <input type="text" class="input-field" placeholder="ГСК №4, бокс 12">
+      <p>Укажи адрес или номер гаража для доставки:</p>
+      <input type="text" class="input-field" id="altAddress" placeholder="ГСК №4, бокс 12">
       <div class="nav-buttons"><button class="btn" onclick="finishAlt()">Вызвать!</button></div>
     </div>
+    
+    <!-- ФИНАЛ: ПОВЕСТКА -->
     <div class="modal-step" id="altStep4">
       <div style="text-align: center;">
-        <span style="font-size: 3rem;">🎉</span>
-        <p id="resultTextAlt" style="margin-top: 10px; font-weight: bold;"></p>
-        <div class="nav-buttons" style="justify-content: center;"><button class="btn" onclick="closeModal('altModal')">Жду у гаража!</button></div>
+        <span style="font-size: 3.5rem;">📜</span>
+        <h4 style="color: #e74c3c; font-size: 1.4rem; margin-top: 6px;">ПОВЕСТКА НА ЗАВОД!</h4>
+        <p id="conscriptionText" style="margin-top: 10px; font-size: 0.95rem; line-height: 1.4; color: #ffcccc;"></p>
+        <div class="nav-buttons" style="justify-content: center; margin-top: 16px;">
+          <button class="btn" style="background: #a93226; border-color: #e74c3c;" onclick="closeModal('altModal')">Есть! Пошел в смену! 🫡</button>
+        </div>
       </div>
     </div>
   </div>
@@ -441,7 +457,7 @@
 </div>
 
 <script>
-  // ========== БАЗА ФРАЗ (СТРОГО ПО ТЕМАМ) ==========
+  // ========== БАЗА ФРАЗ ПО ТЕМАМ ==========
   const categorizedPhrases = {
     politics: [
       "Я на выборы председателя ГСК №4 не пойду, там всё равно Михалыча пропихнут!",
@@ -466,7 +482,7 @@
       "Картофельные танки — для детей, а у нас в Тундре физика!",
       "Взял премиумный куст, теперь меня в лесу хрен кто увидит.",
       "Вышел в БР 10.0, а там одни вертолетчики сверху пускают ракеты.",
-      "ИС-2 — вот это дрыгатель! Шарахнет так, что у врага башня отлетает!",
+      "ИС-2 — вот это дрыгатель! Шарахнет так, что у врага башня отлетаet!",
       "Засел на горке в кустах, сижу, пивко потягиваю, фраги собираю."
     ],
     factory: [
@@ -494,7 +510,6 @@
     ]
   };
 
-  // Варианты ответов мужиков на сообщения пользователя
   const botUserReplies = [
     "Базу выдал, братуха!",
     "Дело говоришь, поддерживаю!",
@@ -505,9 +520,11 @@
   ];
 
   const skufNames = ['Колян', 'Димон', 'Серёга', 'Петрович', 'Васян', 'Михалыч', 'Толик', 'Гриша', 'Палыч', 'Вован'];
+  
+  // ИНИЦИАЛИЗАЦИЯ СОХРАНЕНИЯ ЧАТОВ ПО ТЕМАМ
+  const chatHistories = { politics: [], tanks: [], factory: [], garage: [] };
   let currentCategory = 'politics';
 
-  // ========== УПРАВЛЕНИЕ ЧАТОМ ==========
   const chatBox = document.getElementById('chatBox');
   const chatInput = document.getElementById('chatInput');
 
@@ -516,62 +533,86 @@
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     element.classList.add('active');
 
-    // Очищаем и выводим приветственное по теме
-    chatBox.innerHTML = '';
-    const categoryTitles = {
-      politics: '🏛️ Раздел: Политика и мировой порядок',
-      tanks: '🎯 Раздел: War Thunder и танковые бои',
-      factory: '🏭 Раздел: Заводские будни и смены',
-      garage: '🚗 Раздел: Гараж, Нива и Гранта'
-    };
-    addMessage(`<strong>Система:</strong> Переключено в режим "${categoryTitles[cat]}"`, false);
-    
-    // Сразу генерируем пару стартовых фраз по выбранной теме
-    setTimeout(() => spawnBotMessage(), 400);
-    setTimeout(() => spawnBotMessage(), 1200);
+    // Отрисовываем сохраненные сообщения этой темы
+    renderChatHistory();
   }
 
-  function addMessage(text, isOwn = false, msgId = null) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `msg${isOwn ? ' own' : ''}`;
-    if (msgId) msgDiv.id = msgId;
+  function renderChatHistory() {
+    chatBox.innerHTML = '';
+    const history = chatHistories[currentCategory];
 
-    msgDiv.innerHTML = `<div>${text}</div>`;
-
-    // Если это сообщение ПОЛЬЗОВАТЕЛЯ — добавляем блок лайков
-    if (isOwn) {
-      const reactBox = document.createElement('div');
-      reactBox.className = 'reactions';
-      reactBox.innerHTML = `
-        <button class="reaction-btn" onclick="likeMsg(this)">👍 <span class="count">0</span></button>
-        <button class="reaction-btn" onclick="likeMsg(this)">👎 <span class="count">0</span></button>
-      `;
-      msgDiv.appendChild(reactBox);
+    if (history.length === 0) {
+      const categoryTitles = {
+        politics: '🏛️ Раздел: Политика и мировой порядок',
+        tanks: '🎯 Раздел: War Thunder и танковые бои',
+        factory: '🏭 Раздел: Заводские будни и смены',
+        garage: '🚗 Раздел: Гараж, Нива и Гранта'
+      };
+      addMessageToHistory(currentCategory, `<strong>Система:</strong> Переключено в "${categoryTitles[currentCategory]}"`, false);
+      spawnBotMessage();
+    } else {
+      history.forEach(item => {
+        renderSingleMessageUI(item.text, item.isOwn, item.msgId, item.likes, item.dislikes);
+      });
     }
-
-    chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  function likeMsg(btn) {
+  function addMessageToHistory(category, text, isOwn = false, msgId = null) {
+    const id = msgId || 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+    const msgObj = { text, isOwn, msgId: id, likes: Math.floor(Math.random() * 4), dislikes: Math.floor(Math.random() * 2) };
+    chatHistories[category].push(msgObj);
+
+    if (category === currentCategory) {
+      renderSingleMessageUI(msgObj.text, msgObj.isOwn, msgObj.msgId, msgObj.likes, msgObj.dislikes);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  }
+
+  function renderSingleMessageUI(text, isOwn, msgId, likes = 0, dislikes = 0) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `msg${isOwn ? ' own' : ''}`;
+    msgDiv.id = msgId;
+
+    msgDiv.innerHTML = `<div>${text}</div>`;
+
+    // ДОБАВЛЯЕМ ЛАЙКИ И ДИЗЛАЙКИ ВСЕМ СООБЩЕНИЯМ
+    const reactBox = document.createElement('div');
+    reactBox.className = 'reactions';
+    reactBox.innerHTML = `
+      <button class="reaction-btn" onclick="likeMsg(this, '${msgId}', 'like')">👍 <span class="count">${likes}</span></button>
+      <button class="reaction-btn" onclick="likeMsg(this, '${msgId}', 'dislike')">👎 <span class="count">${dislikes}</span></button>
+    `;
+    msgDiv.appendChild(reactBox);
+
+    chatBox.appendChild(msgDiv);
+  }
+
+  function likeMsg(btn, msgId, type) {
     const countSpan = btn.querySelector('.count');
     let count = parseInt(countSpan.textContent);
     count++;
     countSpan.textContent = count;
     btn.classList.add('active');
+
+    // Сохраняем лайк в истории
+    const msgObj = chatHistories[currentCategory].find(m => m.msgId === msgId);
+    if (msgObj) {
+      if (type === 'like') msgObj.likes = count;
+      else msgObj.dislikes = count;
+    }
   }
 
   function spawnBotMessage() {
     const pool = categorizedPhrases[currentCategory];
     const phrase = pool[Math.floor(Math.random() * pool.length)];
     const name = skufNames[Math.floor(Math.random() * skufNames.length)];
-    addMessage(`<strong>${name}:</strong> ${phrase}`);
+    addMessageToHistory(currentCategory, `<strong>${name}:</strong> ${phrase}`, false);
   }
 
-  // ========== ДИНАМИЧЕСКИЙ РАНДОМНЫЙ РИТМ ЧАТА ==========
+  // ========== ДИНАМИЧЕСКИЙ РИТМ ЧАТА ==========
   function scheduleNextMessage() {
-    // Рандомный интервал: от 800мс (быстрый чат) до 6000мс (затишье)
-    const randomDelay = Math.floor(Math.random() * 5200) + 800;
+    const randomDelay = Math.floor(Math.random() * 5000) + 1000;
     setTimeout(() => {
       spawnBotMessage();
       scheduleNextMessage();
@@ -591,29 +632,26 @@
 
     const safe = raw.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const userMsgId = 'msg-' + Date.now();
-    addMessage(`<strong>${sender}:</strong> ${safe}`, true, userMsgId);
+    
+    addMessageToHistory(currentCategory, `<strong>${sender}:</strong> ${safe}`, true, userMsgId);
     chatInput.value = '';
 
-    // МУЖИКИ РЕАГИРУЮТ НА СООБЩЕНИЕ ПОЛЬЗОВАТЕЛЯ (Лайки + Ответы)
+    // Реакция ботов на сообщение пользователя
     setTimeout(() => {
       const myMsg = document.getElementById(userMsgId);
       if (myMsg) {
-        // Ставят лайки/дизлайки
         const buttons = myMsg.querySelectorAll('.reaction-btn');
         if (buttons.length > 0) {
           const upBtn = buttons[0].querySelector('.count');
-          const downBtn = buttons[1].querySelector('.count');
-          upBtn.textContent = Math.floor(Math.random() * 5) + 1;
-          if (Math.random() < 0.3) downBtn.textContent = Math.floor(Math.random() * 2) + 1;
+          upBtn.textContent = parseInt(upBtn.textContent) + Math.floor(Math.random() * 3) + 1;
         }
       }
     }, 1000);
 
-    // Кто-то обязательно отвечает пользователю
     setTimeout(() => {
       const name = skufNames[Math.floor(Math.random() * skufNames.length)];
       const reply = botUserReplies[Math.floor(Math.random() * botUserReplies.length)];
-      addMessage(`<strong>${name}:</strong> @${sender}, ${reply}`);
+      addMessageToHistory(currentCategory, `<strong>${name}:</strong> @${sender}, ${reply}`, false);
     }, 1800);
   }
 
@@ -667,11 +705,46 @@
     }
   });
 
-  // ========== МОДАЛКИ ==========
+  // ========== МОДАЛКИ И АЛЬТУШКА / ПОВЕСТКА ==========
   function openModal(id) { document.getElementById(id).classList.add('active'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function closeModal(id) { 
+    document.getElementById(id).classList.remove('active'); 
+    // Сброс модалки альтушки к первому шагу
+    if (id === 'altModal') {
+      document.getElementById('altModalBox').classList.remove('conscription-box');
+      document.getElementById('altModalTitle').textContent = '💃 Вызов альтушки';
+      nextAltStep(1);
+    }
+  }
 
-  // ========== ИГРА ПИВНОЙ ДОЖДЬ ==========
+  document.getElementById('callAltBtn').addEventListener('click', () => { openModal('altModal'); nextAltStep(1); });
+
+  function nextAltStep(step) {
+    document.querySelectorAll('#altModal .modal-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`altStep${step}`).classList.add('active');
+  }
+
+  // ФИНАЛ: ВМЕСТО АЛЬТУШКИ ПРИХОДИТ ПОВЕСТКА
+  function finishAlt() {
+    const address = document.getElementById('altAddress').value || 'ГСК №4';
+    const ladaNum = document.getElementById('ladaNumber').value || 'Без номеров';
+
+    // Включаем тревожный красный стиль для модалки
+    document.getElementById('altModalBox').classList.add('conscription-box');
+    document.getElementById('altModalTitle').textContent = '🚨 ОПЕРАТИВНОЕ ИЗВЕЩЕНИЕ';
+
+    document.getElementById('conscriptionText').innerHTML = `
+      Скуф! Вместо альтушки по адресу <strong>"${address}"</strong> за тобой выехал военком на УАЗике!<br><br>
+      Лада (номер: <strong>${ladaNum}</strong>) мобилизована под нужды цеха! Срочно прибыть в 3-й токарный цех на ночную смену!
+    `;
+
+    nextAltStep(4);
+  }
+
+  document.getElementById('ladaPhotoBtn').addEventListener('click', () => openModal('ladaPhotoModal'));
+  document.getElementById('regBtn').addEventListener('click', () => openModal('regModal'));
+
+  // ИГРА ПИВНОЙ ДОЖДЬ
   const gameField = document.getElementById('gameField');
   const scoreSpan = document.getElementById('gameScore');
   const livesSpan = document.getElementById('gameLives');
@@ -754,21 +827,6 @@
     this.textContent = paused ? '▶️ Продолжить' : '⏸️ Пауза';
   });
 
-  // ========== АЛЬТУШКА & ИВЕНТЫ ==========
-  document.getElementById('callAltBtn').addEventListener('click', () => { openModal('altModal'); nextAltStep(1); });
-  function nextAltStep(step) {
-    document.querySelectorAll('#altModal .modal-step').forEach(s => s.classList.remove('active'));
-    document.getElementById(`altStep${step}`).classList.add('active');
-  }
-  function finishAlt() {
-    nextAltStep(4);
-    const ladaNum = document.getElementById('ladaNumber').value || 'Без номеров';
-    document.getElementById('resultTextAlt').textContent = `Альтушка выехала на Ладе (${ladaNum})!`;
-  }
-
-  document.getElementById('ladaPhotoBtn').addEventListener('click', () => openModal('ladaPhotoModal'));
-  document.getElementById('regBtn').addEventListener('click', () => openModal('regModal'));
-
   // Галерея
   const factoryData = [
     { label: '🏭 Приборный', img: 'https://fototerra.ru/photo/Russia/Staraja-Russa/image219833.jpg' },
@@ -784,10 +842,10 @@
     factoryRow.appendChild(div);
   });
 
-  // Старт
+  // Старт приложения
   renderUserProfile();
   setCategory('politics', document.querySelector('.tag-btn.active'));
-  scheduleNextMessage(); // Запуск динамического генератора сообщений
+  scheduleNextMessage();
 </script>
 
 </body>
